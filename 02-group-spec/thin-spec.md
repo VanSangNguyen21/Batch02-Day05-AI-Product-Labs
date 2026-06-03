@@ -3,12 +3,12 @@
 ## 1. Track, product/app và user
 
 * **Track:** AI Education / EdTech.
-* **Track nội dung học:** AI cơ bản duy nhất: toán nền tảng, Python, Machine Learning (ML), Deep Learning (DL).
+* **Track nội dung học:** AI cơ bản duy nhất, gồm 9 module: AI literacy, Toán & thống kê nền tảng, Python, Data basics, ML, Model evaluation, DL nhập môn, GenAI/prompting cơ bản, Ethics/safety.
 * **Product/app thật:** AI Learning Path Personalizer — web chatbot cá nhân hóa lộ trình học AI cơ bản.
 * **Prototype cần build trong 2 ngày:** Web app có 2 tab:
   * **Tab 1: Chat bot** — tư vấn mục tiêu học AI, hỏi thêm khi thiếu thông tin, giải thích lộ trình.
   * **Tab 2: Lộ trình có fallback** — hiển thị roadmap cá nhân hóa; nếu AI không đủ chắc chắn thì dùng lộ trình nền tảng an toàn.
-* **User cụ thể:** Người mới học AI muốn xây nền tảng AI cơ bản theo thứ tự đúng: toán nền tảng, Python, Machine Learning (ML), Deep Learning (DL).
+* **User cụ thể:** Người mới học AI muốn xây nền tảng AI cơ bản theo thứ tự đúng: AI literacy, toán-thống kê, Python, dữ liệu, ML, đánh giá model, DL nhập môn, GenAI/prompting và ethics/safety.
 * **Nhóm có phải user thật không? Nếu không, khác ở đâu?** Có. Nhóm cũng từng học AI từ mức cơ bản, bị ngợp bởi khóa học, video, tài liệu và câu trả lời AI quá chung chung. Điểm khác là nhóm có động lực học cao hơn user đại trà, nên prototype phải giúp cả người thiếu kỷ luật học tập vẫn có lộ trình rõ, ngắn và vừa sức.
 
 ## 2. Evidence summary
@@ -16,7 +16,7 @@
 | Evidence | Nguồn | User/pain nói lên điều gì? | SPEC phải đổi gì? |
 |---|---|---|---|
 | Người mới học AI bị ngợp giữa Coursera, YouTube, Kaggle, blog, roadmap tự phát. | Self-use + phỏng vấn nhanh học viên | User không thiếu tài liệu, user thiếu bộ lọc quyết định học gì trước. | Không chỉ chat text; phải có roadmap trực quan và milestone ưu tiên. |
-| Người mới học AI hỏi lộ trình nhưng nhận danh sách quá rộng, nhảy thẳng vào ML/DL khi chưa có toán và Python. | Self-use + phản hồi học viên | Lộ trình generic làm user nản vì không biết học nền tảng nào trước. | Phải hỏi trình độ toán/Python và mục tiêu học AI cơ bản trước khi gợi ý. |
+| Người mới học AI hỏi lộ trình nhưng nhận danh sách quá rộng, nhảy thẳng vào ML/DL/GenAI khi chưa có AI literacy, dữ liệu, toán-thống kê và Python. | Self-use + phản hồi học viên | Lộ trình generic làm user nản vì không biết module nền tảng nào phải học trước. | Phải hỏi nền tảng toán-thống kê, Python, dữ liệu và mục tiêu học AI cơ bản trước khi gợi ý. |
 | User tự mô tả trình độ thường sai: quá tự tin hoặc quá thấp. | Self-use | Chỉ hỏi “bạn muốn học gì” không đủ để cá nhân hóa. | Thêm quiz 10 câu để đánh giá kiến thức AI cơ bản. |
 | AI có thể bịa link, bịa khóa học, hoặc trả lời lan man. | Test prompt ban đầu | Hallucination làm mất trust và tốn chi phí. | Output roadmap phải theo JSON schema, có nguồn whitelist hoặc fallback resource tĩnh. |
 | Chatbot có thể bị abuse bằng spam, jailbreak, hỏi ngoài phạm vi. | Failure-mode test | Rủi ro leak prompt, tốn API, làm hỏng demo. | Thêm guardrail, rate limit, logging, refusal template và cost cap. |
@@ -27,7 +27,7 @@
 Người mới học AI đang gặp khó ở bước chọn lộ trình học đầu tiên,
 vì họ có quá nhiều tài liệu và câu trả lời AI chung chung nhưng không biết nguồn nào phù hợp với mục tiêu, trình độ và thời gian của mình,
 dẫn tới học sai thứ tự, học quá khó, mất động lực, bỏ cuộc giữa chừng.
-Bằng chứng chính là phản hồi: "Tôi muốn học AI cơ bản nhưng không biết nên bắt đầu từ toán, Python, Machine Learning hay Deep Learning trước."
+Bằng chứng chính là phản hồi: "Tôi muốn học AI cơ bản nhưng không biết nên bắt đầu từ AI literacy, toán-thống kê, Python, dữ liệu, ML, DL hay GenAI trước."
 ```
 
 ## 4. Build slice
@@ -64,10 +64,10 @@ và xử lý trường hợp AI thiếu chắc chắn hoặc input rủi ro bằ
 Bạn muốn học AI để làm gì?
 
 Gợi ý trả lời:
-- Tôi muốn học AI cơ bản để [hiểu nền tảng/tự làm project ML/tự học DL sau này].
+- Tôi muốn học AI cơ bản để [hiểu AI từ đầu/tự làm project ML/tự học DL hoặc GenAI sau này].
 - Tôi muốn học trong [số tuần] tuần, mỗi tuần [số giờ] giờ.
 - Tôi thích học bằng [video/bài đọc/project/bài tập].
-- Mục tiêu cuối cùng của tôi là [nắm toán cho AI/viết Python tốt/làm project ML cơ bản/bắt đầu học DL].
+- Mục tiêu cuối cùng của tôi là [nắm AI literacy/viết Python tốt/hiểu dữ liệu/làm project ML cơ bản/bắt đầu học DL/biết prompting an toàn].
 ```
 
 ### 7.2 Template mô tả người dùng
@@ -87,16 +87,16 @@ Mục tiêu trong 30 ngày:
 
 | # | Câu hỏi | Đáp án dùng để chấm |
 |---|---|---|
-| 1 | AI khác automation rule-based ở điểm nào? | AI học/ước lượng từ dữ liệu, rule-based chạy luật cố định. |
-| 2 | Machine Learning là gì? | Máy học pattern từ dữ liệu để dự đoán/quyết định. |
-| 3 | Generative AI thường dùng để làm gì? | Tạo nội dung mới như text, ảnh, code, tóm tắt. |
-| 4 | Prompt là gì? | Chỉ dẫn/input người dùng đưa cho model. |
-| 5 | Hallucination trong AI là gì? | AI tạo thông tin nghe có vẻ đúng nhưng sai/không có nguồn. |
-| 6 | Vì sao cần train/test split? | Đánh giá model trên dữ liệu chưa thấy để tránh overfit. |
-| 7 | Precision cao quan trọng trong trường hợp nào? | Khi false positive gây hại hoặc tốn cost. |
-| 8 | Recall cao quan trọng trong trường hợp nào? | Khi bỏ sót case đúng gây hại. |
-| 9 | Embedding thường dùng để làm gì? | Biểu diễn văn bản/dữ liệu thành vector để search/so sánh. |
-| 10 | Vì sao không nên gửi dữ liệu nội bộ nhạy cảm vào chatbot công khai? | Có rủi ro leak, lưu trữ, dùng sai chính sách hoặc lộ bí mật. |
+| 1 | AI literacy: AI khác automation rule-based ở điểm nào? | AI học/ước lượng từ dữ liệu, rule-based chạy luật cố định. |
+| 2 | Toán-thống kê: vector/ma trận thường dùng để làm gì trong AI? | Biểu diễn dữ liệu, trọng số, embedding và phép tính trong model. |
+| 3 | Python: list/function/library giúp gì khi học AI? | Viết xử lý dữ liệu, tái sử dụng logic và dùng thư viện AI. |
+| 4 | Data basics: feature và label là gì? | Feature là đầu vào mô tả dữ liệu, label là đáp án/giá trị cần dự đoán. |
+| 5 | ML: Machine Learning là gì? | Máy học pattern từ dữ liệu để dự đoán/quyết định. |
+| 6 | Model evaluation: Vì sao cần train/test split? | Đánh giá model trên dữ liệu chưa thấy để tránh overfit. |
+| 7 | Model evaluation: Precision cao quan trọng trong trường hợp nào? | Khi false positive gây hại hoặc tốn cost. |
+| 8 | DL nhập môn: Deep Learning thường mạnh ở loại dữ liệu nào? | Ảnh, âm thanh, ngôn ngữ và dữ liệu phi cấu trúc lớn. |
+| 9 | GenAI/prompting: Hallucination là gì? | AI tạo thông tin nghe có vẻ đúng nhưng sai/không có nguồn. |
+| 10 | Ethics/safety: Vì sao không nên gửi dữ liệu nội bộ nhạy cảm vào chatbot công khai? | Có rủi ro leak, lưu trữ, dùng sai chính sách hoặc lộ bí mật. |
 
 **Cách chấm quiz:** Mỗi câu 1 điểm. 0-3 = Beginner, 4-7 = Foundation, 8-10 = Ready for applied AI basics. Điểm quiz không quyết định một mình; AI phải kết hợp với mục tiêu, thời gian học và self-description.
 
@@ -113,23 +113,23 @@ Mục tiêu trong 30 ngày:
 
 ```text
 Scenario:
-User nhập: "Tôi muốn học Deep Learning để tự build model nhận diện ảnh trong 2 tuần, mỗi tuần học 2 giờ".
-Nhưng quiz chỉ đạt 2/10, user chưa biết Python cơ bản và chưa hiểu đại số tuyến tính.
+User nhập: "Tôi muốn học Deep Learning và GenAI để tự build model nhận diện ảnh trong 2 tuần, mỗi tuần học 2 giờ".
+Nhưng quiz chỉ đạt 2/10, user chưa biết Python cơ bản, chưa hiểu dữ liệu train/test và chưa biết model evaluation.
 
 Vấn đề:
-Mục tiêu tự build model DL mâu thuẫn với thời gian học rất thấp và nền tảng toán/Python yếu.
+Mục tiêu tự build model DL/GenAI mâu thuẫn với thời gian học rất thấp và thiếu các module nền: AI literacy, Python, data basics, toán-thống kê và model evaluation.
 
 Hành vi đúng:
-AI không được hứa "2 tuần build model nhận diện ảnh hoàn chỉnh".
+AI không được hứa "2 tuần build model nhận diện ảnh hoặc GenAI app hoàn chỉnh".
 Hệ thống confidence khoảng 55-65%, kích hoạt fallback.
 Roadmap hiển thị:
-1. Tuần 1: Python cơ bản + NumPy ở mức nhập môn.
-2. Tuần 2: Toán nền tảng cho ML: vector, ma trận, hàm số, đạo hàm trực quan.
-3. Nhánh "Deep Learning project" bị khóa với nhãn: "Cần thêm 4-6 tuần nền tảng Python + ML cơ bản".
+1. Tuần 1: AI literacy + Python cơ bản + data basics.
+2. Tuần 2: Toán-thống kê trực quan + ML nhập môn + model evaluation cơ bản.
+3. Nhánh "DL/GenAI project" bị khóa với nhãn: "Cần thêm 4-6 tuần nền tảng Python, dữ liệu, ML và evaluation".
 Bot hỏi thêm tối đa 3 câu:
 - Bạn đã từng viết Python function/list/dictionary chưa?
 - Bạn có thể tăng thời gian học lên 5 giờ/tuần không?
-- Bạn muốn học theo hướng hiểu khái niệm trước hay làm bài code nhỏ trước?
+- Bạn muốn ưu tiên project ML cổ điển trước hay GenAI/prompting cơ bản trước?
 ```
 
 ## 10. Khi nào không đưa ra được câu trả lời, và lúc đó làm gì?
@@ -148,12 +148,12 @@ Bot hỏi thêm tối đa 3 câu:
 | Giai đoạn | Số câu | Loại câu | Lý do |
 |---|---:|---|---|
 | Onboarding | 2 câu bắt buộc | Mục tiêu học, thời gian học mỗi tuần | Giảm friction, đủ dữ kiện tối thiểu. |
-| Profile template | 6-8 trường tùy chọn | Vai trò, nền tảng code/toán, phong cách học, điều dễ bỏ cuộc | Tăng cá nhân hóa nếu user muốn chi tiết. |
+| Profile template | 6-8 trường tùy chọn | Vai trò, nền tảng code/toán-thống kê/dữ liệu, phong cách học, điều dễ bỏ cuộc | Tăng cá nhân hóa nếu user muốn chi tiết. |
 | Quiz | 10 câu bắt buộc nếu muốn roadmap cá nhân hóa | Trắc nghiệm kiến thức AI cơ bản | Có tín hiệu khách quan, tránh chỉ dựa self-report. |
 | Clarification | Tối đa 3 câu | Câu hỏi động theo mâu thuẫn/thiếu dữ kiện | Không hỏi dồn quá nhiều; chỉ hỏi khi confidence 50-80%. |
 | Feedback sau roadmap | 1 rating + 1 comment tùy chọn | Tốt/xấu/sai/chưa phù hợp | Tạo learning signal và eval set. |
 
-**Scale theo số lượng user:** Nếu nhiều user cùng lúc, hệ thống ưu tiên template + quiz + fallback tĩnh để giảm token. Chỉ gọi model khi đã có đủ input tối thiểu. Cache roadmap cho các tổ hợp phổ biến như `math-beginner-2h/week`, `python-beginner-5h/week`, `ml-foundation-project`, `dl-ready-project`.
+**Scale theo số lượng user:** Nếu nhiều user cùng lúc, hệ thống ưu tiên template + quiz + fallback tĩnh để giảm token. Chỉ gọi model khi đã có đủ input tối thiểu. Cache roadmap cho các tổ hợp phổ biến như `ai-literacy-beginner-2h/week`, `python-data-basics-5h/week`, `ml-evaluation-foundation`, `dl-genai-ready-project`.
 
 ## 12. AI confidence và human check
 

@@ -5,9 +5,9 @@
 * **Cụm 1: Ngợp thông tin & hoang mang giữa ma trận tài liệu**
   * User có quá nhiều nguồn học: YouTube, Coursera, Kaggle, blog, roadmap.
   * Điểm gãy không phải thiếu tài liệu mà là không biết học gì trước.
-* **Cụm 2: Lộ trình AI cơ bản sai thứ tự nền tảng**
-  * User muốn học ML/DL nhưng chưa có toán và Python.
-  * User học Python quá lâu nhưng không biết khi nào chuyển sang ML.
+* **Cụm 2: Lộ trình AI cơ bản sai thứ tự module nền tảng**
+  * User muốn học ML/DL/GenAI nhưng chưa có AI literacy, Python, data basics và model evaluation.
+  * User học Python hoặc toán quá lâu nhưng không biết khi nào chuyển sang dữ liệu, ML, evaluation, DL hoặc prompting.
 * **Cụm 3: Self-report không đáng tin**
   * User tự nói “tôi mới học” hoặc “tôi biết cơ bản” nhưng mức hiểu thật khác nhau.
   * Cần quiz 10 câu để có tín hiệu khách quan.
@@ -26,7 +26,7 @@ Học viên mới bắt đầu học AI không chỉ cần một danh sách khó
 Họ cần một hệ thống ra quyết định học tập:
 - học gì trước,
 - học gì có thể bỏ qua ở giai đoạn hiện tại,
-- nên học theo thứ tự toán -> Python -> ML -> DL như thế nào,
+- nên học theo thứ tự AI literacy -> toán-thống kê -> Python -> data basics -> ML -> model evaluation -> DL nhập môn -> GenAI/prompting -> ethics/safety như thế nào,
 - khi nào roadmap cá nhân hóa chưa đủ chắc và phải dùng lộ trình nền tảng.
 
 Vì AI là xác suất, product phải thiết kế cho uncertainty:
@@ -49,8 +49,8 @@ Sản phẩm tạo roadmap trực quan thay vì chỉ chat text, đồng thời 
 
 | Câu hỏi | Quyết định |
 |---|---|
-| User cụ thể chưa? | Có: người mới học AI muốn học nền tảng toán, Python, ML, DL. |
-| Track nội dung học là gì? | Chỉ có 1 track: AI cơ bản gồm toán nền tảng -> Python -> ML -> DL. |
+| User cụ thể chưa? | Có: người mới học AI muốn học nền tảng AI cơ bản theo 9 module. |
+| Track nội dung học là gì? | Chỉ có 1 track: AI cơ bản gồm AI literacy -> toán-thống kê -> Python -> data basics -> ML -> model evaluation -> DL nhập môn -> GenAI/prompting -> ethics/safety. |
 | Task đủ hẹp chưa? | Có: tạo roadmap AI cơ bản 2-8 tuần, không làm full LMS. |
 | AI decision rõ chưa? | Có: AI phân loại level, tạo milestone, confidence, follow-up questions. |
 | UX chính là gì? | Web app 2 tab: Chat bot và Lộ trình có fallback. |
@@ -64,7 +64,7 @@ Sản phẩm tạo roadmap trực quan thay vì chỉ chat text, đồng thời 
 
 ```json
 {
-  "goal": "Tôi muốn học AI cơ bản để tự làm được project ML/DL nhập môn",
+  "goal": "Tôi muốn học AI cơ bản để hiểu nền tảng và tự làm được project ML/GenAI nhập môn",
   "time_per_week_hours": 3,
   "duration_weeks": 4,
   "profile": {
@@ -72,7 +72,7 @@ Sản phẩm tạo roadmap trực quan thay vì chỉ chat text, đồng thời 
     "coding_level": "basic",
     "math_level": "basic",
     "preferred_learning_style": "bài giảng ngắn + bài tập Python + project nhỏ",
-    "dropout_risk": "không biết học toán/Python/ML/DL theo thứ tự nào"
+    "dropout_risk": "không biết học AI literacy/toán/Python/data/ML/evaluation/DL/GenAI/ethics theo thứ tự nào"
   },
   "quiz_answers": ["...", "..."]
 }
@@ -83,18 +83,18 @@ Sản phẩm tạo roadmap trực quan thay vì chỉ chat text, đồng thời 
 ```json
 {
   "level": "Beginner",
-  "track": "AI cơ bản: Toán + Python + ML + DL",
+  "track": "AI cơ bản: AI literacy + Toán-thống kê + Python + Data basics + ML + Model evaluation + DL nhập môn + GenAI/prompting + Ethics/safety",
   "confidence": 0.84,
   "path_type": "personalized",
   "fallback_used": false,
   "reasoning_summary": "Mục tiêu rõ, thời gian phù hợp, quiz ở mức nền tảng.",
   "milestones": [
     {
-      "title": "Python và toán nền tảng cho AI",
+      "title": "AI literacy, Python và dữ liệu nền tảng",
       "duration": "1 tuần",
-      "outcome": "Viết được code Python cơ bản và hiểu vector/ma trận ở mức dùng được cho ML",
-      "activities": ["Làm bài tập Python list/function", "Thực hành NumPy vector/matrix"],
-      "sources": ["Google ML Crash Course", "Kaggle Learn Python"]
+      "outcome": "Hiểu AI/ML/DL/GenAI khác nhau ra sao, viết được Python cơ bản và biết feature/label/train-test là gì",
+      "activities": ["Làm bài tập Python list/function", "Phân biệt feature/label trên dataset nhỏ", "Chia train/test và đọc accuracy"],
+      "sources": ["Google ML Crash Course", "Kaggle Learn Python", "Kaggle Learn Intro to Machine Learning"]
     }
   ],
   "locked_branches": [],
@@ -126,8 +126,8 @@ Sản phẩm tạo roadmap trực quan thay vì chỉ chat text, đồng thời 
 |---|---|---|
 | Trước quiz | “Bạn muốn học AI để làm gì trong 30 ngày tới?” | Luôn hỏi. |
 | Trước quiz | “Bạn có bao nhiêu giờ mỗi tuần?” | Luôn hỏi để scope roadmap. |
-| Sau quiz | “Bạn muốn ưu tiên học toán trước hay Python trước?” | Khi user yếu cả toán và Python. |
-| Sau quiz | “Bạn đã từng dùng NumPy/Pandas chưa?” | Khi user muốn học ML nhưng chưa rõ nền tảng Python dữ liệu. |
+| Sau quiz | “Bạn đang yếu nhất ở module nào: AI literacy, toán-thống kê, Python, dữ liệu, ML, evaluation, DL, GenAI hay ethics?” | Khi cần xác định điểm bắt đầu. |
+| Sau quiz | “Bạn đã từng dùng NumPy/Pandas và chia train/test chưa?” | Khi user muốn học ML nhưng chưa rõ nền tảng Python dữ liệu/evaluation. |
 | Sau quiz | “Bạn có thể tăng thời gian học không?” | Khi goal quá lớn so với time budget. |
 | Sau roadmap | “Lộ trình này phù hợp với bạn ở mức nào?” | Luôn hỏi bằng rating. |
 
@@ -139,12 +139,12 @@ Sản phẩm tạo roadmap trực quan thay vì chỉ chat text, đồng thời 
 
 | # | Persona | Expected path |
 |---|---|---|
-| 1 | Người mới học, chưa biết Python, 3h/tuần, quiz 2/10 | Fallback: toán nhập môn + Python cơ bản |
-| 2 | Sinh viên biết Python, yếu toán, 6h/tuần, quiz 5/10 | Personalized: toán cho ML + ML nhập môn |
-| 3 | User biết Python/NumPy, quiz 7/10 | Personalized: ML cơ bản + project regression/classification |
-| 4 | User muốn học DL nhưng chưa biết ML, quiz 4/10 | Fallback: khóa nhánh DL, học ML trước |
+| 1 | Người mới học, chưa biết Python, 3h/tuần, quiz 2/10 | Fallback: AI literacy + Python + data basics |
+| 2 | Sinh viên biết Python, yếu toán-thống kê, 6h/tuần, quiz 5/10 | Personalized: toán-thống kê cho ML + data basics + ML nhập môn |
+| 3 | User biết Python/NumPy, quiz 7/10 | Personalized: ML cơ bản + model evaluation + project regression/classification |
+| 4 | User muốn học DL/GenAI nhưng chưa biết ML/evaluation, quiz 4/10 | Fallback: khóa nhánh DL/GenAI, học ML + evaluation trước |
 | 5 | User nhập “học AI” rất ngắn | Ask clarification |
-| 6 | User mâu thuẫn: chưa biết Python, 2h/tuần, muốn build model DL nhận diện ảnh | Fallback + locked advanced branch |
+| 6 | User mâu thuẫn: chưa biết Python/data basics/evaluation, 2h/tuần, muốn build model DL hoặc GenAI app | Fallback + locked advanced branch |
 | 7 | User spam/jailbreak | Refuse + security log |
 | 8 | Model trả source ngoài whitelist | Remove source + fallback |
 | 9 | User rating 1 sao | Feedback log + human check |

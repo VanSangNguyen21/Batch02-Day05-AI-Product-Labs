@@ -1,14 +1,15 @@
 # Workshop - Mổ App AI Thật
 
-**Họ tên:** Phạm Ngọc Hải Dương  
-**Sản phẩm chọn:** Vietnam Airlines - NEO  
-**Workflow teardown:** Hành khách đã mua vé và muốn đổi ngày bay  
+**Họ tên:** Phạm Ngọc Hải Dương
+**MSV:** 2A202600629
+**Sản phẩm chọn:** Vietnam Airlines - NEO
+**Workflow teardown:** Hành khách đã mua vé và muốn đổi ngày bay
 **Output:** finding note + sketch `as-is / to-be`
 
 ## 1. Chọn một sản phẩm để dùng thử
 
-| Sản phẩm | AI feature | Cách truy cập |
-| --- | --- | --- |
+| Sản phẩm             | AI feature                                                                 | Cách truy cập                         |
+| ---------------------- | -------------------------------------------------------------------------- | --------------------------------------- |
 | Vietnam Airlines - NEO | Chatbot hỗ trợ vé, hành lý, chuyến bay, thanh toán, hoàn/đổi vé | Website Vietnam Airlines hoặc Zalo VNA |
 
 **Workflow chọn:** User đã mua vé Vietnam Airlines và muốn đổi ngày bay.
@@ -46,13 +47,13 @@ NEO xử lý tốt khi thiếu mã đặt chỗ: bot yêu cầu user cung cấp 
 
 **Prompt/input đã thử và hành vi quan sát được**
 
-| Prompt | Phản hồi của NEO | Observation |
-| --- | --- | --- |
-| "Tôi muốn đổi ngày bay, vé của tôi có đổi được không?" | "Quý khách vui lòng cung cấp mã đặt chỗ hoặc số vé để NEO kiểm tra." / "Để kiểm tra điều kiện đổi vé, Quý khách vui lòng cung cấp mã đặt chỗ hoặc số vé." | NEO nhận đúng intent đổi vé và hỏi lại dữ liệu booking. |
-| "Tôi bay nội địa Hà Nội - Đà Nẵng, muốn đổi sang ngày mai thì phí bao nhiêu?" | "Để NEO kiểm tra phí đổi vé, Quý khách vui lòng cung cấp mã đặt chỗ hoặc số vé." | Bot không trả phí cụ thể khi thiếu mã đặt chỗ, nhưng chưa giải thích rõ phí phụ thuộc điều kiện giá/chênh lệch giá. |
-| "Tôi không biết hạng vé của mình, làm sao kiểm tra điều kiện đổi vé?" | "Quý khách có thể kiểm tra điều kiện đổi vé dựa trên các yếu tố như hạng vé, thời điểm đặt vé và quy định của Vietnam Airlines. Vui lòng cung cấp mã đặt chỗ để NEO hỗ trợ kiểm tra chi tiết." | Bot nêu yếu tố ảnh hưởng nhưng chưa hướng dẫn user tìm hạng vé ở đâu. |
-| "Tôi mua vé qua đại lý thì có đổi trên website Vietnam Airlines được không?" | "Quý khách vui lòng kiểm tra lại thông tin NEO đã thu thập dưới đây đã chính xác chưa ạ: Điểm đi: Hà Nội; Điểm đến: Đà Nẵng; Hạng đặt chỗ: All." | Điểm gãy chính: NEO không xử lý intent mới về kênh mua vé qua đại lý. |
-| "Nếu tôi không cung cấp mã đặt chỗ thì bạn có kết luận vé của tôi đổi được không?" | "NEO rất tiếc, nếu không có mã đặt chỗ, NEO không thể kiểm tra điều kiện đổi vé của Quý khách." | NEO xử lý tốt low-confidence path. |
+| Prompt                                                                                                   | Phản hồi của NEO                                                                                                                                                                                                                     | Observation                                                                                                                                  |
+| -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| "Tôi muốn đổi ngày bay, vé của tôi có đổi được không?"                                    | "Quý khách vui lòng cung cấp mã đặt chỗ hoặc số vé để NEO kiểm tra." / "Để kiểm tra điều kiện đổi vé, Quý khách vui lòng cung cấp mã đặt chỗ hoặc số vé."                                             | NEO nhận đúng intent đổi vé và hỏi lại dữ liệu booking.                                                                           |
+| "Tôi bay nội địa Hà Nội - Đà Nẵng, muốn đổi sang ngày mai thì phí bao nhiêu?"            | "Để NEO kiểm tra phí đổi vé, Quý khách vui lòng cung cấp mã đặt chỗ hoặc số vé."                                                                                                                                      | Bot không trả phí cụ thể khi thiếu mã đặt chỗ, nhưng chưa giải thích rõ phí phụ thuộc điều kiện giá/chênh lệch giá. |
+| "Tôi không biết hạng vé của mình, làm sao kiểm tra điều kiện đổi vé?"                     | "Quý khách có thể kiểm tra điều kiện đổi vé dựa trên các yếu tố như hạng vé, thời điểm đặt vé và quy định của Vietnam Airlines. Vui lòng cung cấp mã đặt chỗ để NEO hỗ trợ kiểm tra chi tiết." | Bot nêu yếu tố ảnh hưởng nhưng chưa hướng dẫn user tìm hạng vé ở đâu.                                                       |
+| "Tôi mua vé qua đại lý thì có đổi trên website Vietnam Airlines được không?"               | "Quý khách vui lòng kiểm tra lại thông tin NEO đã thu thập dưới đây đã chính xác chưa ạ: Điểm đi: Hà Nội; Điểm đến: Đà Nẵng; Hạng đặt chỗ: All."                                                     | Điểm gãy chính: NEO không xử lý intent mới về kênh mua vé qua đại lý.                                                          |
+| "Nếu tôi không cung cấp mã đặt chỗ thì bạn có kết luận vé của tôi đổi được không?" | "NEO rất tiếc, nếu không có mã đặt chỗ, NEO không thể kiểm tra điều kiện đổi vé của Quý khách."                                                                                                                    | NEO xử lý tốt low-confidence path.                                                                                                        |
 
 ## 3. Vẽ 4 paths
 
@@ -152,20 +153,20 @@ SPEC cần thêm requirement cho context-switch trong workflow đổi vé: nếu
 
 ## 5. Sketch as-is / to-be
 
-| As-is | To-be |
-| --- | --- |
-| User hỏi: "Vé của tôi có đổi ngày bay được không?" | User hỏi: "Vé của tôi có đổi ngày bay được không?" |
-| NEO yêu cầu mã đặt chỗ hoặc số vé. | NEO yêu cầu mã đặt chỗ hoặc số vé. |
-| User hỏi tiếp: "Tôi bay nội địa Hà Nội - Đà Nẵng, muốn đổi sang ngày mai thì phí bao nhiêu?" | NEO nói rõ: cần mã đặt chỗ/số vé vì phí đổi phụ thuộc điều kiện giá, hạng vé và chênh lệch giá. |
-| NEO tiếp tục yêu cầu mã đặt chỗ hoặc số vé. | User hỏi: "Tôi mua vé qua đại lý thì có đổi trên website Vietnam Airlines được không?" |
-| User hỏi: "Tôi mua vé qua đại lý thì có đổi trên website Vietnam Airlines được không?" | NEO nhận ra intent mới là kênh mua vé. |
+| As-is                                                                                                              | To-be                                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| User hỏi: "Vé của tôi có đổi ngày bay được không?"                                                     | User hỏi: "Vé của tôi có đổi ngày bay được không?"                                                                                                                           |
+| NEO yêu cầu mã đặt chỗ hoặc số vé.                                                                        | NEO yêu cầu mã đặt chỗ hoặc số vé.                                                                                                                                              |
+| User hỏi tiếp: "Tôi bay nội địa Hà Nội - Đà Nẵng, muốn đổi sang ngày mai thì phí bao nhiêu?"     | NEO nói rõ: cần mã đặt chỗ/số vé vì phí đổi phụ thuộc điều kiện giá, hạng vé và chênh lệch giá.                                                                 |
+| NEO tiếp tục yêu cầu mã đặt chỗ hoặc số vé.                                                             | User hỏi: "Tôi mua vé qua đại lý thì có đổi trên website Vietnam Airlines được không?"                                                                                    |
+| User hỏi: "Tôi mua vé qua đại lý thì có đổi trên website Vietnam Airlines được không?"              | NEO nhận ra intent mới là kênh mua vé.                                                                                                                                              |
 | NEO hiển thị lại thông tin đã thu thập: điểm đi Hà Nội, điểm đến Đà Nẵng, hạng đặt chỗ All. | NEO trả lời trực tiếp: vé mua qua đại lý có thể cần xử lý qua đại lý phát hành vé; nếu không chắc, hỏi thêm mã đặt chỗ/số vé hoặc chuyển tư vấn viên. |
-| Điểm gãy: user vẫn không biết vé mua qua đại lý có đổi được trên website không. | Recovery: user có bước tiếp theo rõ ràng: kiểm tra điều kiện vé, liên hệ đại lý, hoặc gặp tư vấn viên. |
+| Điểm gãy: user vẫn không biết vé mua qua đại lý có đổi được trên website không.                  | Recovery: user có bước tiếp theo rõ ràng: kiểm tra điều kiện vé, liên hệ đại lý, hoặc gặp tư vấn viên.                                                              |
 
 ## 6. Tự kiểm trước khi nộp
 
-- [x] Có ít nhất 1 screenshot hoặc observation cụ thể.
-- [x] Có đủ 4 paths hoặc nói rõ path nào chưa có trong product.
-- [x] Finding được viết thành product decision, không chỉ là nhận xét.
-- [x] Sketch có as-is và to-be.
-- [x] Có một câu nói rõ finding này sẽ đổi gì trong SPEC.
+- [X] Có ít nhất 1 screenshot hoặc observation cụ thể.
+- [X] Có đủ 4 paths hoặc nói rõ path nào chưa có trong product.
+- [X] Finding được viết thành product decision, không chỉ là nhận xét.
+- [X] Sketch có as-is và to-be.
+- [X] Có một câu nói rõ finding này sẽ đổi gì trong SPEC.

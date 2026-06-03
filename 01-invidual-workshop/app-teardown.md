@@ -1,18 +1,18 @@
 # Workshop — Mổ App AI Thật
 
-**Thời gian:** 35-45 phút  
-**Hình thức:** cá nhân trước, chia sẻ theo nhóm sau  
+**Thời gian:** 35-45 phút
+**Hình thức:** cá nhân trước, chia sẻ theo nhóm sau
 **Output:** finding note + sketch `as-is / to-be`
 
 Mục tiêu không phải chấm "UI đẹp hay xấu". Mục tiêu là dùng sản phẩm thật như một bài needfinding: tìm chỗ product gãy trong workflow thật, rồi viết finding đó thành quyết định product.
 
 ## 1. Chọn một sản phẩm để dùng thử
 
-| Sản phẩm | AI feature | Cách truy cập |
-|---|---|---|
-| MoMo — Moni | Trợ thủ tài chính, phân tích chi tiêu, chatbot | App MoMo |
-| Vietnam Airlines — NEO | Chatbot hỗ trợ vé, hành lý, khiếu nại | Website/Zalo VNA |
-| V-App — V-AI | Trợ lý voice/text, gợi ý theo ngữ cảnh | App V-App |
+| Sản phẩm              | AI feature                                            | Cách truy cập  |
+| ----------------------- | ----------------------------------------------------- | ---------------- |
+| MoMo — Moni            | Trợ thủ tài chính, phân tích chi tiêu, chatbot | App MoMo         |
+| Vietnam Airlines — NEO | Chatbot hỗ trợ vé, hành lý, khiếu nại          | Website/Zalo VNA |
+| V-App — V-AI           | Trợ lý voice/text, gợi ý theo ngữ cảnh          | App V-App        |
 
 ## 2. Dùng thử: promise vs reality
 
@@ -32,12 +32,12 @@ Evidence cần có:
 
 ## 3. Vẽ 4 paths
 
-| Path | Câu hỏi cần trả lời |
-|---|---|
-| Happy | Khi AI đúng và tự tin, user thấy gì? |
+| Path           | Câu hỏi cần trả lời                                                                  |
+| -------------- | ----------------------------------------------------------------------------------------- |
+| Happy          | Khi AI đúng và tự tin, user thấy gì?                                                |
 | Low-confidence | Khi AI không chắc, hệ thống có hỏi lại, show options hoặc chuyển người không? |
-| Failure | Khi AI sai, user biết bằng cách nào và sửa thế nào? |
-| Correction | Khi user sửa, correction có được lưu/log/học lại không hay biến mất? |
+| Failure        | Khi AI sai, user biết bằng cách nào và sửa thế nào?                               |
+| Correction     | Khi user sửa, correction có được lưu/log/học lại không hay biến mất?           |
 
 ## 4. Viết finding thành quyết định
 

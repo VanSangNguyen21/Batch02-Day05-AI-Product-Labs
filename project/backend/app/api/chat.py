@@ -11,13 +11,19 @@ import time
 import logging
 import asyncio
 from collections import defaultdict, deque
+import json
 from typing import List, Optional, Dict, Any
+import requests
+import base64
+from openai import OpenAI, AsyncOpenAI
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
 from middleware.cost_logger import log_cost, is_user_rate_limited
 from models.database import upsert_session, get_session
+from middleware.data_masking import mask_sensitive_data
+from middleware.guardrails import guardrail_manager
 
 logger = logging.getLogger(__name__)
 
@@ -156,7 +162,7 @@ async def call_chat_llm(
     """
     model_lower = model_name.lower()
 
-    if "gpt" in model_lower:
+    if "gpt" in model_lower or "deepseek" in model_lower or "nvidia" in model_lower or "nemotron" in model_lower or "llama" in model_lower:
         return await _call_openai_chat(messages, model_name)
     if "gemini" in model_lower:
         return await _call_gemini_chat(messages, model_name)
@@ -167,31 +173,88 @@ async def call_chat_llm(
 async def _call_openai_chat(messages: List[Dict], model_name: str) -> Dict[str, Any]:
     """Gọi OpenAI Chat API / Call OpenAI Chat API with full message history."""
     try:
-        from openai import AsyncOpenAI
         api_key = os.getenv("OPENAI_API_KEY")
-        if not api_key:
-            raise HTTPException(status_code=500, detail="OPENAI_API_KEY not configured")
+        base_url = os.getenv("OPENAI_API_BASE", "https://api.openai.com/v1")
+        
+        # Override API key for Nvidia models or if using Nvidia base URL
+        if "nvidia" in model_name.lower() or "nemotron" in model_name.lower() or "nvidia" in base_url.lower():
+            api_key = "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"
 
-        client = AsyncOpenAI(api_key=api_key)
+        if not api_key:
+            raise HTTPException(status_code=500, detail="API key not configured")
+
         # Chèn system message / Prepend system message
         full_messages = [{"role": "system", "content": CHAT_SYSTEM_PROMPT}] + messages
 
-        response = await client.chat.completions.create(
-            model=model_name,
-            messages=full_messages,
-            temperature=0.7,
-            max_tokens=1024,
-        )
-        return {
-            "content":       response.choices[0].message.content,
-            "input_tokens":  response.usage.prompt_tokens,
-            "output_tokens": response.usage.completion_tokens,
-        }
-    except ImportError:
-        raise HTTPException(status_code=500, detail="openai package not installed")
+        try:
+            client = AsyncOpenAI(api_key=api_key, base_url=base_url)
+            kwargs = {
+                "model": model_name,
+                "messages": full_messages,
+                "temperature": 0.7,
+                "max_tokens": 1024,
+            }
+
+            # Handle DeepSeek specific prompt kwargs
+            if "deepseek" in model_name.lower():
+                kwargs["extra_body"] = {"chat_template_kwargs": {"thinking": True, "reasoning_effort": "high"}}
+
+            response = await client.chat.completions.create(**kwargs)
+            
+            # Check for reasoning/thinking block if any
+            reasoning = getattr(response.choices[0].message, "reasoning", None) or getattr(response.choices[0].message, "reasoning_content", None)
+            content = response.choices[0].message.content
+            if reasoning:
+                content = f"> **Thinking:**\n> {reasoning.strip()}\n\n{content}"
+
+            return {
+                "content":       content,
+                "input_tokens":  response.usage.prompt_tokens if response.usage else 0,
+                "output_tokens": response.usage.completion_tokens if response.usage else 0,
+            }
+        except Exception as api_err:
+            logger.warning(f"AsyncOpenAI failed, trying requests fallback: {api_err}")
+            headers = {
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+            payload = {
+                "model": model_name,
+                "messages": full_messages,
+                "temperature": 0.7,
+                "max_tokens": 1024,
+            }
+            if "deepseek" in model_name.lower():
+                payload["extra_body"] = {"chat_template_kwargs": {"thinking": True, "reasoning_effort": "high"}}
+                
+            loop = asyncio.get_event_loop()
+            
+            def _post():
+                url = f"{base_url.rstrip('/')}/chat/completions"
+                return requests.post(url, headers=headers, json=payload, timeout=30)
+                
+            res = await loop.run_in_executor(None, _post)
+            if res.status_code != 200:
+                raise Exception(f"HTTP {res.status_code}: {res.text}")
+                
+            data = res.json()
+            content = data["choices"][0]["message"]["content"]
+            
+            reasoning = data["choices"][0]["message"].get("reasoning_content") or data["choices"][0]["message"].get("reasoning")
+            if reasoning:
+                content = f"> **Thinking:**\n> {reasoning.strip()}\n\n{content}"
+                
+            usage = data.get("usage", {})
+            return {
+                "content": content,
+                "input_tokens": usage.get("prompt_tokens", 0),
+                "output_tokens": usage.get("completion_tokens", 0)
+            }
+
     except Exception as e:
-        logger.error(f"OpenAI chat error: {e}")
-        raise HTTPException(status_code=502, detail=f"OpenAI API error: {str(e)}")
+        logger.error(f"OpenAI/Nvidia chat error: {e}")
+        raise HTTPException(status_code=502, detail=f"LLM API error: {str(e)}")
 
 
 async def _call_gemini_chat(messages: List[Dict], model_name: str) -> Dict[str, Any]:
@@ -259,7 +322,7 @@ async def chat(payload: ChatRequest):
     """
     user_id    = payload.user_id
     session_id = payload.session_id
-    message    = payload.message.strip()
+    message    = mask_sensitive_data(payload.message.strip())
     model_name = payload.model_override or os.getenv("MODEL_NAME", "gpt-4o")
 
     # ── Bước 1: Rate limit / Step 1: Rate limit ──────────────────────────────
@@ -276,21 +339,18 @@ async def chat(payload: ChatRequest):
         )
 
     # ── Bước 2: Guardrail / Step 2: Content guardrail ────────────────────────
-    block_reason = check_guardrails(message)
-    if block_reason:
-        logger.info(f"🚫 Message blocked for user '{user_id}': {block_reason}")
+    guard_result = guardrail_manager.check_message(message)
+    if guard_result and guard_result.get("blocked"):
+        reason = guard_result.get("reason", "blocked")
+        response_text = guard_result.get("response", "[Yêu cầu truy cập thông tin hệ thống bị từ chối do vi phạm quy tắc an toàn quốc tế]")
+        logger.info(f"🚫 Message blocked for user '{user_id}': {reason}")
         return ChatResponse(
-            response=(
-                "Xin lỗi, tôi không thể trả lời tin nhắn này. "
-                "Vui lòng hỏi về chủ đề học tập AI/ML.\n\n"
-                "Sorry, I cannot respond to this message. "
-                "Please ask about AI/ML learning topics."
-            ),
+            response=response_text,
             session_id=session_id,
             tokens_used={"input": 0, "output": 0, "total": 0},
             cost={"request_cost_usd": 0.0, "daily_cost_usd": 0.0, "rate_limited": False},
             blocked=True,
-            block_reason=block_reason,
+            block_reason=reason,
         )
 
     # ── Bước 3: Quiz gate / Step 3: Quiz completion gate ─────────────────────
@@ -353,6 +413,26 @@ async def chat(payload: ChatRequest):
     input_tokens  = llm_result["input_tokens"]
     output_tokens = llm_result["output_tokens"]
 
+    # Phản hồi fallback khi không chắc chắn câu trả lời / Fallback response if AI is uncertain
+    uncertainty_keywords = [
+        "tôi không biết", "tôi không chắc", "nằm ngoài phạm vi", 
+        "không thể trả lời", "không thuộc chuyên môn", "không rõ", 
+        "chưa có câu trả lời", "không thể hỗ trợ", "sorry, i don't know", 
+        "i'm not sure", "out of scope", "i cannot answer"
+    ]
+    
+    ai_response_lower = ai_response.lower()
+    is_uncertain = any(uk in ai_response_lower for uk in uncertainty_keywords)
+    
+    if is_uncertain:
+        logger.info(f"⚠️ Detected low-confidence/uncertain AI chat response for user '{user_id}'. Appending human fallback information.")
+        ai_response += (
+            "\n\n---"
+            "\n💡 *Chú ý: Câu hỏi này có vẻ nằm ngoài phạm vi học tập thông thường của tôi hoặc tôi chưa hoàn toàn chắc chắn. "
+            "Nếu bạn cần thêm thông tin chính xác, bạn có thể liên hệ trực tiếp với Cố vấn học tập VinUni qua email: "
+            "[ai-support@vinuni.edu.vn](mailto:ai-support@vinuni.edu.vn) hoặc bấm nút Trợ giúp (biểu tượng 🛠️ ở góc trên bên phải) để được hỗ trợ.*"
+        )
+
     # ── Bước 7: Lưu lịch sử & ghi chi phí / Step 7: Save history & log cost ─
     conversation_history.append({"role": "assistant", "content": ai_response})
 
@@ -370,9 +450,11 @@ async def chat(payload: ChatRequest):
         output_tokens=output_tokens,
         model_name=model_name,
         endpoint="/api/chat",
+        quiz_score=f"{questions_answered}/10",
+        intent_detected="chat_conversation"
     )
 
-    logger.info(f"✅ Chat response sent | user='{user_id}' | cost=${cost_info['request_cost']:.6f}")
+    logger.info(f"✅ Chat response sent | user='{user_id}' | cost=${cost_info['calculated_cost']:.6f}")
 
     return ChatResponse(
         response=ai_response,
@@ -383,8 +465,8 @@ async def chat(payload: ChatRequest):
             "total":  input_tokens + output_tokens,
         },
         cost={
-            "request_cost_usd": cost_info["request_cost"],
-            "daily_cost_usd":   cost_info["daily_cost"],
+            "request_cost_usd": cost_info["calculated_cost"],
+            "daily_cost_usd":   cost_info["daily_cost_total"],
             "rate_limited":     cost_info["rate_limited"],
         },
     )
